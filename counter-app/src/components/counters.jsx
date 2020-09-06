@@ -11,25 +11,26 @@ class Counters extends Component {
     ],
   };
 
+  //updating state
   handleDelete = (counterId) => {
     const counters = this.state.counters.filter((c) => c.id !== counterId); //create a new array without item, have react save as new state
-    this.setState({ counters: counters });
+    this.setState({ counters });
   };
 
   handleReset = () => {
-    const counters = this.state.counters.map((c) => {
+    const counters = this.state.counters.map(c => {
       c.value = 0;
-      return c;
+      return c; //map method returns a new array (new State obj)
     });
-    this.setState({ counters });
+    this.setState({ counters }); //update state with new State obj
   };
 
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value++;
-    this.setState({ counters });
+    counters[index] = { ...counter }; //clone counter obj@ [index] 
+    counters[index].value++; //update state in new counter obj VS. state in old counter obj (no-no in React)
+    this.setState({ counters }); //update state with new counters array (cloned / modified) 
   };
 
   render() {
