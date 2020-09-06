@@ -12,6 +12,20 @@ class App extends Component {
     ],
   };
 
+  //constructor - lifecycle hook - MOUNT -> (called once during instantiation) used to intialize properties in class 
+  constructor(props){
+    super(props);
+    //this.state = this.props.something; will set state of component based on props 
+    console.log('App - Constructor'); 
+  }
+
+  //lifecycle hook - MOUNT -> called after component is rendered in DOM (AJAX calls to get server data)
+  componentDidMount(){
+    //AJAX call
+    //this.setState({ Movies })
+    console.log('App - Mounted'); 
+  }
+
   //updating state
   handleDelete = (counterId) => {
     const counters = this.state.counters.filter((c) => c.id !== counterId); //create a new array without item, have react save as new state
@@ -35,6 +49,8 @@ class App extends Component {
   };
 
   render() {
+    console.log('App - rendered'); //lifecycle hook - MOUNT- Render()
+
     return (
       <React.Fragment>
         <NavBar
@@ -44,7 +60,7 @@ class App extends Component {
           <Counters
             counters={this.state.counters} //sent via props to child
             onReset={this.handleReset}
-            onIncrement={this.handleIncrement} //data & methods controlled by parent*/
+            onIncrement={this.handleIncrement} //data & methods controlled by parent
             onDelete={this.handleDelete}
           />
         </main>
