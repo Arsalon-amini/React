@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 
 //Stateless functional component
 //pass props object -> use destructuring { targetMemberofProps } = props
 
 const NavBar = ({ totalCounters }) => {
-  console.log('NavBar - Rendered'); 
-  
+  console.log("NavBar - Rendered");
+
   return (
     <nav className="navbar navbar-light bg-light">
       <a className="navbar-brand" href="#">
