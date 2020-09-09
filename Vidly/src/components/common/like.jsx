@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 //input: liked (boolean)
 //output: onClick (consumer -> handles toggle + db save)

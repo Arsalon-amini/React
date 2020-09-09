@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash"; //optimized version of underscore
 
@@ -9,7 +9,7 @@ const Pagination = (props) => {
   const pagesCount = Math.ceil(itemsCount / pageSize); //rounds to greatest int
   if (pagesCount === 1) return null;
 
-  const pages = _.range(1, pagesCount + 1); //util fn to generate (return) array with numbers (start, end)
+  const pages = _.range(1, pagesCount + 1); //return array with numbers (start, end)
 
   return (
     <nav>
