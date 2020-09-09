@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash"; //optimized version of underscore
 
-const Pagination = (props) => {
-  const { itemsCount, pageSize, currentPage, onPageChange } = props; //part of props (from movies)
-
+const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange } ) => {
   console.log(currentPage);
   const pagesCount = Math.ceil(itemsCount / pageSize); //rounds to greatest int
   if (pagesCount === 1) return null;
