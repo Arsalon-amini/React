@@ -1,22 +1,17 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import Input from "./common/input";
+import Input from "./input";
 
-class LoginForm extends Component {
+class Form extends Component {
   state = {
-    account: { username: "", password: "" },
+    data: {},
     errors: {},
-  };
-
-  schema = {
-    username: Joi.string().required().label("Username"),
-    password: Joi.string().required().label("Password"),
   };
 
   //validates entire form
   validate = () => {
     const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.account, this.schema, options);
+    const { error } = Joi.validate(this.state.data, this.schema, options);
     console.log(error);
 
     if (!error) return null;
@@ -41,8 +36,7 @@ class LoginForm extends Component {
     this.setState({ errors: errors || {} });
     if (errors) return;
 
-    //call server
-    console.log("submit");
+    this.doSubmit();
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -52,40 +46,33 @@ class LoginForm extends Component {
     //set name of error prop
     else delete errors[input.name];
 
-    const account = { ...this.state.account };
-    account[input.name] = input.value; //returns input from our field dynamically, can get value
-    this.setState({ account, errors });
+    const data = { ...this.state.data };
+    data[input.name] = input.value; //returns input from our field dynamically, can get value
+    this.setState({ data, errors });
   };
 
-  render() {
-    const { account, errors } = this.state;
+  renderButton(label) {
+    return (
+      <button disabled={this.validate()} className="btn btn-primary">
+        {label}
+      </button>
+    );
+  }
+
+  renderInput(name, label, type = 'text') {
+    const { data, errors } = this.state;
 
     return (
-      <div>
-        <h1> Login </h1>
-        <form onSubmit={this.handleSubmit}>
-          <Input
-            name="username"
-            value={account.username}
-            label="Username"
-            onChange={this.handleChange}
-            error={errors.username}
-          />
-          <Input
-            name="password"
-            value={account.password}
-            label="Password"
-            onChange={this.handleChange}
-            error={errors.password}
-          />
-          <button disabled={this.validate()} className="btn btn-primary">
-            {" "}
-            Login{" "}
-          </button>
-        </form>
-      </div>
+      <Input
+        type={type}
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
     );
   }
 }
 
-export default LoginForm;
+export default Form;
