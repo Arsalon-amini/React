@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Joi from "joi-browser";
 import Input from "./common/input";
 
 class LoginForm extends Component {
@@ -7,30 +8,30 @@ class LoginForm extends Component {
     errors: {},
   };
 
+  schema = {
+    username: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
+  };
+
   //validates entire form
   validate = () => {
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+    console.log(error);
+
+    if (!error) return null;
+
     const errors = {};
-    const { account } = this.state;
-
-    if (account.username.trim() === "")
-      errors.username = "Username is required"; //if empty string
-    if (account.password.trim() === "")
-      errors.password = "Password is required"; //password required
-
-    return Object.keys(errors).length === 0 ? null : errors; //returns an array
+    for (let item of error.details) errors[item.path[0]] = item.message; //pushing into state
+    return errors;
   };
 
   //validates each property
   validateProperty = ({ name, value }) => {
-    if (name === "username") {
-      if (value.trim() === "") return "Username is required.";
-      ///...other rules
-    }
-
-    if (name === "password") {
-      if (value.trim() === "") return "Username is required.";
-      ///...other rules
-    }
+    const obj = { [name]: value }; //[computedProperties] = es6 prop passed at runtime ex. username
+    const schema = { [name]: this.schema[name] }; //for each prop, will look at schema validation logic / use
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null; //returns truthy (obj) if error, or null (falsy) no error
   };
 
   handleSubmit = (e) => {
@@ -77,7 +78,10 @@ class LoginForm extends Component {
             onChange={this.handleChange}
             error={errors.password}
           />
-          <button className="btn btn-primary"> Login </button>
+          <button disabled={this.validate()} className="btn btn-primary">
+            {" "}
+            Login{" "}
+          </button>
         </form>
       </div>
     );
