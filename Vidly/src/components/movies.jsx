@@ -3,10 +3,10 @@ import MoviesTable from "./moviesTable";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import ListGroup from "./common/listGroup";
-
 import Pagination from "../components/common/pagination";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
+import { Link } from 'react-router-dom';
 
 class Movies extends Component {
   state = {
@@ -71,11 +71,7 @@ class Movies extends Component {
 
   render() {
     const { length: count } = this.state.movies; //obj destructure with alias, get length from array and set to new const count
-    const {
-      pageSize,
-      currentPage,
-      sortColumn,
-    } = this.state;
+    const { pageSize, currentPage, sortColumn } = this.state;
 
     if (count === 0) return <p> There are no movies in the database. </p>;
 
@@ -91,6 +87,13 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link
+            to="/movies/new"
+            class="btn btn-primary"
+            style={{ marginBottom: 20 }}
+          >
+            New Movie
+          </Link>
           <p> Showing {totalCount} movies in the database </p>
           <MoviesTable
             movies={movies}

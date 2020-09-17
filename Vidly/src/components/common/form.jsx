@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
+import Select  from './select';
 
 class Form extends Component {
   state = {
@@ -8,11 +9,23 @@ class Form extends Component {
     errors: {},
   };
 
+  //each HTML input field has onChange() event -> whenver user types something event is raised (how we get user input)
+  handleChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    //setting nested object prop - > state object -> error object -> key: value (username: error message)
+    else delete errors[input.name];
+
+    const data = { ...this.state.data };
+    data[input.name] = input.value; //setting state ->  nested data obj member key:value (ex. username: 'asaa')
+    this.setState({ data, errors });
+  };
+
   //validates entire form
   validate = () => {
     const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.data, this.schema, options);
-    console.log(error);
+    const { error } = Joi.validate(this.state.data, this.schema, options); //destructure Joi obj, pick only error property
 
     if (!error) return null;
 
@@ -30,25 +43,13 @@ class Form extends Component {
   };
 
   handleSubmit = (e) => {
-    e.preventDefault(); //prevents full page reload (submission of form)
+    e.preventDefault(); //every HTML form has an onSubmit() event, this event obj (e) has a default behavior (full page reload)-> e.preventDefault stops full page reload (making a SinglePageApp)
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (errors) return;
 
     this.doSubmit();
-  };
-
-  handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    //set name of error prop
-    else delete errors[input.name];
-
-    const data = { ...this.state.data };
-    data[input.name] = input.value; //returns input from our field dynamically, can get value
-    this.setState({ data, errors });
   };
 
   renderButton(label) {
@@ -59,7 +60,22 @@ class Form extends Component {
     );
   }
 
-  renderInput(name, label, type = 'text') {
+  renderSelect(name, label, options){
+    const { data, errors } = this.state; 
+
+    return(
+        <Select 
+        name={name}
+        value={data[name]}
+        label={label}
+        options={options}
+        onChange={this.handleChange}
+        error={errors[name]}
+        />
+    )
+  }
+
+  renderInput(name, label, type = "text") {
     const { data, errors } = this.state;
 
     return (
