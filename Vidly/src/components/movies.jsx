@@ -6,7 +6,7 @@ import ListGroup from "./common/listGroup";
 import Pagination from "../components/common/pagination";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 class Movies extends Component {
   state = {
@@ -18,7 +18,6 @@ class Movies extends Component {
   };
 
   componentDidMount() {
-    // called after component rendered in DOM, make AJAX call -> setState -> render
     const genres = [{ _id: "", name: "All Genres" }, ...getGenres()]; //spread result from getGenres + add additional obj
     this.setState({ movies: getMovies(), genres });
   }
@@ -89,7 +88,7 @@ class Movies extends Component {
         <div className="col">
           <Link
             to="/movies/new"
-            class="btn btn-primary"
+            className="btn btn-primary"
             style={{ marginBottom: 20 }}
           >
             New Movie
