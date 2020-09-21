@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { ToastContainer } from "react-toastify"; //toastify
+import http from "./services/httpService"; //hide axios behind http module (re-usable)
+import config from "./config.json";
+import "react-toastify/dist/ReactToastify.css"; //toasty .css
 import "./App.css";
-
-const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
   state = {
@@ -10,43 +11,51 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    //const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
-    const { data: posts } = await axios.get(apiEndpoint); //returns a promise, descructure response, get {data: posts} member only
+    const { data: posts } = await http.get(config.apiEndpoint); //returns a promise, desctructure response, {data: posts} member only
     this.setState({ posts });
   }
 
   handleAdd = async () => {
     const obj = { title: "a", body: "b" };
-    const { data: post } = await axios.post(apiEndpoint, obj); //destructure response, pick data prop
+    const { data: post } = await http.post(config.apiEndpoint, obj); //destructure response, pick data prop
     console.log(post);
 
-    const posts = [post,...this.state.posts];
-    this.setState({posts}); 
+    const posts = [post, ...this.state.posts];
+    this.setState({ posts });
   };
 
   handleUpdate = async (post) => {
-    post.title = "UPDATED"; 
-    //const { data } = await axios.patch(apiEndpoint + '/' + post.id, {title: post.title }); //sending only properties to be updated 
-    const { data } = await axios.put(apiEndpoint + '/' + post.id, post); //send entire post obj to be updated
-    console.log(data); 
+    post.title = "UPDATED";
+    //const { data } = await http.patch(config.apiEndpoint + '/' + post.id, {title: post.title }); //sending only properties to be updated
+    const { data } = await http.put(config.apiEndpoint + "/" + post.id, post); //send entire post obj to be updated
+    console.log(data);
 
     const posts = [...this.state.posts]; //clone posts array (state)
-    const index = posts.indexOf(post); 
-    posts[index] = {...post}; //clone new post 
+    const index = posts.indexOf(post);
+    posts[index] = { ...post }; //clone new post
     this.setState({ posts });
   };
 
   handleDelete = async (post) => {
-    const result = await axios.delete(apiEndpoint + '/' + post.id); //url that identifies resource (removed on server)
+    const originalPosts = this.state.posts;
 
-    console.log(result);
-    const posts = this.state.posts.filter(p => p.id !== post.id); //delete from state (array)
-    this.setState({posts}); 
+    const posts = this.state.posts.filter((p) => p.id !== post.id);
+    this.setState({ posts });
+
+    try {
+      await http.delete(config.apiEndpoint + "/" + post.id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        alert("This post has already been deleted");
+
+      this.setState({ posts: originalPosts }); //revert back to previous state
+    }
   };
 
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <button className="btn btn-primary" onClick={this.handleAdd}>
           Add
         </button>
