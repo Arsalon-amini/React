@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ToastContainer } from "react-toastify"; //toastify
+import { toast } from "react-toastify";
 import http from "./services/httpService"; //hide axios behind http module (re-usable)
 import config from "./config.json";
 import "react-toastify/dist/ReactToastify.css"; //toasty .css
@@ -38,15 +39,16 @@ class App extends Component {
 
   handleDelete = async (post) => {
     const originalPosts = this.state.posts;
-
+    //update DOM (optimistic update)
     const posts = this.state.posts.filter((p) => p.id !== post.id);
     this.setState({ posts });
 
+    //call server
     try {
       await http.delete(config.apiEndpoint + "/" + post.id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
-        alert("This post has already been deleted");
+        toast.error("This post has already been deleted");
 
       this.setState({ posts: originalPosts }); //revert back to previous state
     }
