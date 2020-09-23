@@ -22,7 +22,7 @@ class RegisterForm extends Form {
       if(ex.response && ex.response.status === 400){
         const errors = {...this.state.errors }; 
         errors.username = ex.response.data; //server filters error obj, sends back msg. as res.data -> res.status(400).send(error.details[0].message);
-        this.setState( {errors }); 
+        this.setState( { errors }); 
       }
     }
   
@@ -44,6 +44,8 @@ class RegisterForm extends Form {
 }
 
 export default RegisterForm;
+
+
 
 
 
