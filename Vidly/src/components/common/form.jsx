@@ -29,12 +29,12 @@ class Form extends Component {
 
     if (!error) return null;
 
-    const errors = {};
+    const errors = {}; //make new copy of state obj
     for (let item of error.details) errors[item.path[0]] = item.message; //pushing into state
     return errors;
   };
 
-  //validates each property
+  //validates each input field 
   validateProperty = ({ name, value }) => {
     const obj = { [name]: value }; //[computedProperties] = es6 prop passed at runtime ex. username
     const schema = { [name]: this.schema[name] }; //for each prop, will look at schema validation logic / use

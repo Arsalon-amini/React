@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getGenres } from "../services/fakeGenreService";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/genreService";
+import { getMovie, saveMovie } from "../services/movieService";
 
 class MovieForm extends Form {
   state = {
@@ -27,24 +27,26 @@ class MovieForm extends Form {
       .label("Daily Rental Rate"),
   };
 
-  componentDidMount() {
-    const genres = getGenres();
-    this.setState({ genres }); //update state to genres (from mock db)
+  async componentDidMount() {
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
 
     const movieId = this.props.match.params.id; //extract movie id from route param
-    if (movieId === "new") return; 
+    if (movieId === "new") return;
 
-    const movie = getMovie(movieId); //use id get movie obj (title, genre, etc.) from server 
-    if (!movie) return this.props.history.replace("/not-found");
-
-    this.setState({ data: this.mapToViewModel(movie) }); //take movie obj returned server, re-mapping to new data structure (viewModel) -> saving in state after transformation 
+    try {
+      const { data: movie } = await getMovie(movieId);
+      this.setState({ data: this.mapToViewModel(movie) });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+    }
   }
 
   mapToViewModel(movie) {
     return {
-      _id: movie._id,
       title: movie.title,
-      genreId: movie.genre._id,
+      genreId: movie.genre,
       numberInStock: movie.numberInStock,
       dailyRentalRate: movie.dailyRentalRate,
     };
@@ -57,6 +59,8 @@ class MovieForm extends Form {
   };
 
   render() {
+    console.log("MovieForm prototype", Object.getPrototypeOf(this));
+    console.log("props", this.props);
     return (
       <div>
         <h1> MovieForm </h1>
