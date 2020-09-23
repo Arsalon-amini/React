@@ -66,8 +66,8 @@ class MovieForm extends Form {
   };
 
   render() {
-    console.log("MovieForm prototype", Object.getPrototypeOf(this));
-    console.log("props", this.props);
+    // console.log("MovieForm prototype", Object.getPrototypeOf(this));
+    // console.log("props", this.props);
     return (
       <div>
         <h1> MovieForm </h1>
