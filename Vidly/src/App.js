@@ -10,7 +10,7 @@ import NavBar from "./components/navBar";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
 import Logout from "./components/logout";
-import auth from "./services/authService"; 
+import auth from "./services/authService";
 import "react-toastify/dist/ReactToastify.css"; //css files
 import "./App.css";
 
@@ -18,8 +18,8 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-   const user = auth.getCurrentUser;
-   this.setState( { user }); 
+    const user = auth.getCurrentUser();
+    this.setState({ user });
   }
 
   render() {

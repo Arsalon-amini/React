@@ -1,7 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import auth from './authService'; 
 import logger from './logService'; //abstraction around Sentry LaaS
 
+//config default headers - send jwt in header w/ POST, GET, etc. 
+axios.defaults.headers.common['x-auth-token'] = auth.getJwt(); // (whenever HTTP sent, include header (token) in req - POST, GET, ETC.)
 
 //axios.interceptors.response.use (arg1 - fn call if success, arg2 - fn call if error)
 axios.interceptors.response.use(null, (error) => {
@@ -24,3 +27,8 @@ export default {
   put: axios.put,
   delete: axios.delete,
 };
+
+
+
+
+

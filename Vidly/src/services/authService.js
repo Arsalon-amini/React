@@ -21,7 +21,6 @@ export function logout() {
   localStorage.removeItem(tokenKey); //removes jwt from local storage (logout)
 }
 
-//
 export function getCurrentUser() {
   try {
     const jwt = localStorage.getItem(tokenKey);
@@ -31,9 +30,14 @@ export function getCurrentUser() {
   }
 }
 
+export function getJwt(){
+  return localStorage.getItem(tokenKey); 
+}
+
 export default {
   login,
   logout,
   loginWithJwt,
   getCurrentUser,
+  getJwt
 };
