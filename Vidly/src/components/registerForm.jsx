@@ -19,7 +19,7 @@ class RegisterForm extends Form {
     try {
       const response = await userService.register(this.state.data); //wrapper around http service -> wrapper around npm axios.post
       localStorage.setItem("token", response.headers["x-auth-token"]);
-      this.props.history.push("/");
+      window.location = "/"; //causes a full page reload -> re-render App
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };

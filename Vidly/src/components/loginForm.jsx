@@ -19,7 +19,7 @@ class LoginForm extends Form {
       const { data } = this.state;
       const { data: jwt } = await login(data.username, data.password); //returns and HTTP promise (axios) -> get jwt from response.body
       localStorage.setItem("token", jwt); //local storage -> store key-value pairs -> arg1 = key, arg2= value
-      this.props.history.push("/"); //redirect user to homepage
+      window.location = "/"; //causes a full page reload -> re-render App
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors }; //clone state.errors obj
