@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { login } from "../services/authService";
+import auth from "../services/authService";
 
 class LoginForm extends Form {
   state = {
@@ -17,8 +17,7 @@ class LoginForm extends Form {
   doSubmit = async () => {
     try {
       const { data } = this.state;
-      const { data: jwt } = await login(data.username, data.password); //returns and HTTP promise (axios) -> get jwt from response.body
-      localStorage.setItem("token", jwt); //local storage -> store key-value pairs -> arg1 = key, arg2= value
+      await auth.login(data.username, data.password); //call to auth -> wrapper around http -> wrapper around axios.post
       window.location = "/"; //causes a full page reload -> re-render App
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
