@@ -23,6 +23,8 @@ class App extends Component {
   }
 
   render() {
+    const {user} = this.state; // define user object in this function 
+
     return (
       <React.Fragment>
         <ToastContainer />
@@ -32,7 +34,13 @@ class App extends Component {
             <Route path="/login" component={LoginForm}></Route>
             <Route path="/logout" component={Logout}></Route>
             <Route path="/register" component={RegisterForm}></Route>
-            <Route path="/movies/:id" component={MovieForm}></Route>
+            <Route 
+            path="/movies/:id" render={ props => {
+              if(!user) return <Redirect to="/login" />
+              return <MovieForm {...props} />; 
+            }}>
+
+            </Route>
             <Route
               path="/movies"
               render={(props) => <Movies {...props} user={this.state.user} />}
@@ -50,3 +58,5 @@ class App extends Component {
 }
 
 export default App;
+
+
