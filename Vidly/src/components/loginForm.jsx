@@ -1,5 +1,6 @@
 import React from "react";
 import Joi from "joi-browser";
+import { Redirect } from "react-router-dom";
 import Form from "./common/form";
 import auth from "../services/authService";
 
@@ -18,7 +19,9 @@ class LoginForm extends Form {
     try {
       const { data } = this.state;
       await auth.login(data.username, data.password); //call to auth -> wrapper around http -> wrapper around axios.post
-      window.location = "/"; //causes a full page reload -> re-render App
+
+      const { state } = this.props.location;
+      window.location = state ? state.from.pathname : "/"; //conditionally render path -> either value of location.state.from or '/'check props
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors }; //clone state.errors obj
@@ -29,6 +32,7 @@ class LoginForm extends Form {
   };
 
   render() {
+    if (auth.getCurrentUser()) return <Redirect to="/" />;
     return (
       <div>
         <h1> Login </h1>
@@ -43,5 +47,3 @@ class LoginForm extends Form {
 }
 
 export default LoginForm;
-
-
