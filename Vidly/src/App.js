@@ -9,6 +9,7 @@ import NotFound from "./components/notFound";
 import NavBar from "./components/navBar";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
+import ProtectedRoute from "./components/common/protectedRoute";
 import Logout from "./components/logout";
 import auth from "./services/authService";
 import "react-toastify/dist/ReactToastify.css"; //css files
@@ -23,7 +24,7 @@ class App extends Component {
   }
 
   render() {
-    const {user} = this.state; // define user object in this function 
+    const { user } = this.state; // define user object in this function
 
     return (
       <React.Fragment>
@@ -34,13 +35,9 @@ class App extends Component {
             <Route path="/login" component={LoginForm}></Route>
             <Route path="/logout" component={Logout}></Route>
             <Route path="/register" component={RegisterForm}></Route>
-            <Route 
-            path="/movies/:id" render={ props => {
-              if(!user) return <Redirect to="/login" />
-              return <MovieForm {...props} />; 
-            }}>
-
-            </Route>
+            <ProtectedRoute 
+              path="/movies/:id"
+             component={MovieForm} />
             <Route
               path="/movies"
               render={(props) => <Movies {...props} user={this.state.user} />}
@@ -58,5 +55,3 @@ class App extends Component {
 }
 
 export default App;
-
-
